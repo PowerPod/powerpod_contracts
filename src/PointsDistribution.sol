@@ -17,12 +17,17 @@ contract PointsDistribution is
     UUPSUpgradeable, 
     ReentrancyGuardUpgradeable  
 {
+    PTPoints public points;
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    event Minted(address to, uint256 amount);
+    event BurnedAllPTPoints();
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    PTPoints public points;
     function initialize(address _PTPointsAddress) public initializer {
         __Ownable_init(msg.sender);
         __AccessControl_init();
@@ -33,20 +38,21 @@ contract PointsDistribution is
         points = PTPoints(_PTPointsAddress);
     }
 
-    function _authorizeUpgrade(
-        address newImplementation
-    ) internal override onlyOwner {}
-
-    
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        points.transfer(to, reward);
+        points.transfer(to, amount);
+
+        emit Minted(to, amount);
     }
 
     function burnAllPTPoints() public onlyOwner {
         uint256 balance = points.balanceOf(address(this));
         points.burn(balance);
+
+        emit BurnedAllPTPoints();
     }
+
+    function _authorizeUpgrade(
+        address newImplementation
+    ) internal override onlyOwner {}
     
 }
