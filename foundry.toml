@@ -11,4 +11,4 @@ remappings = [
 ]
 
 [rpc_endpoints]
-polygon_amoy = "https://polygon-amoy.infura.io/v3/your-key"
+polygon_amoy = "${AMOY_RPC_URL}"

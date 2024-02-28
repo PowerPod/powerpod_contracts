@@ -5,7 +5,7 @@ import "../src/PTPoints.sol";
 import "forge-std/Script.sol";
 
 contract DeployPTPointsImplementation is Script {
-    function run() public {
+    function run() external {
         vm.startBroadcast();
 
         PTPoints implementation = new PTPoints();
