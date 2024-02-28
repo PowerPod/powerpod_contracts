@@ -9,3 +9,6 @@ remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts-upgradeable/lib/openzeppelin-contracts/contracts/",
     "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/"
 ]
+
+[rpc_endpoints]
+polygon_amoy = "https://polygon-amoy.infura.io/v3/your-key"
