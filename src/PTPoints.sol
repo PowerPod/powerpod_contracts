@@ -23,4 +23,11 @@ contract PTPoints is ERC20 {
         return true;
     }
 
+    function burnFrom(address from, uint256 amount) public returns (bool) {
+        address spender = _msgSender();
+        _spendAllowance(from, spender, amount);
+        _burn(from, value);
+        return true;
+    }
+
 }

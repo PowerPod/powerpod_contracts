@@ -22,7 +22,7 @@ contract PointsDistribution is
         _disableInitializers();
     }
 
-    IERC20 public PTPoints;
+    PTPoints public points;
     function initialize(address _PTPointsAddress) public initializer {
         __Ownable_init(msg.sender);
         __AccessControl_init();
@@ -30,7 +30,7 @@ contract PointsDistribution is
         __ReentrancyGuard_init();
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        PTPoints = PTPoints(_PTPointsAddress);
+        points = PTPoints(_PTPointsAddress);
     }
 
     function _authorizeUpgrade(
@@ -41,12 +41,12 @@ contract PointsDistribution is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
     function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
-        PTPoints.transfer(to, reward);
+        points.transfer(to, reward);
     }
 
     function burnAllPTPoints() public onlyOwner {
-        uint256 balance = token.balanceOf(address(this));
-        token.burn(balance);
+        uint256 balance = points.balanceOf(address(this));
+        points.burn(balance);
     }
     
 }
