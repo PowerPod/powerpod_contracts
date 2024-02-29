@@ -16,3 +16,7 @@ docs/
 node_modules/
 
 broadcast/
+
+cache_hardhat/
+
+artifacts/
