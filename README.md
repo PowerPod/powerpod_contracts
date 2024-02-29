@@ -4,7 +4,7 @@
 |  contract | address | 
 |---|---|
 | PT Points Contract | 0xAD32172b6B8860d3015FAeAbF289823453201568 |   
-| Points Distribution Contract |  |   
+| Points Distribution Contract | 0x7BDD924e87f04354DbDAc314b4b39e839403C0c1 |   
 | PPD Token Contract |  |   
 | Token Distribution Contract |  | 
 

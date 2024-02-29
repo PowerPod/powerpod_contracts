@@ -1,6 +1,7 @@
 require('@nomicfoundation/hardhat-toolbox')
 require('@nomicfoundation/hardhat-foundry')
 require('@nomicfoundation/hardhat-verify')
+require('@openzeppelin/hardhat-upgrades')
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
