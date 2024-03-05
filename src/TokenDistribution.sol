@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import "./PTPoints.sol";
 
 contract TokenDistribution is 
     Initializable, 
@@ -14,7 +15,8 @@ contract TokenDistribution is
     UUPSUpgradeable, 
     ReentrancyGuardUpgradeable 
 {
-    IERC20 public PPDToken;
+    IERC20 public token;
+    PTPoints public points;
 
     uint256 public constant INITIAL_PRODUCTION = 45 * 10**6 * 10**18;
     uint256 public constant HALVING_PERIOD = 4 * 365 days;
@@ -40,12 +42,22 @@ contract TokenDistribution is
         _disableInitializers();
     }
 
-    function initialize(address _PPDTokenAddress) public initializer {
+    error OnlyEOA();
+
+    modifier onlyEOA() {
+        if (msg.sender != tx.origin) {
+            revert OnlyEOA();
+        }
+        _;
+    }
+
+    function initialize(address _PPDTokenAddress, address _PTPointsAddress) public initializer {
         __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
 
-        PPDToken = IERC20(_PPDTokenAddress);
+        token = IERC20(_PPDTokenAddress);
+        points = PTPoints(_PTPointsAddress);
 
         annualAllocation = INITIAL_PRODUCTION * 125 / 1000;
         dailyAllocation = annualAllocation / 365;
@@ -77,12 +89,13 @@ contract TokenDistribution is
         lastHalvingTime = block.timestamp;
     }
 
-    function investPT(uint32 _period, uint256 _amount) public {
+    function investPT(uint32 _period, uint256 _amount) public onlyEOA{
         require(_amount > 0, "Investment amount must be greater than 0");
 
         uint32 currentPeriod = getCurrentPeriod();
         require(_period == currentPeriod, "Invalid investment period");
 
+        points.burnFrom(msg.sender, _amount);
         investments[_period][msg.sender] += _amount;
 
         emit Invested(msg.sender, _period, _amount);
@@ -103,7 +116,7 @@ contract TokenDistribution is
         require(reward > 0, "No tokens to claim");
         rewardClaimed[_period][msg.sender] = true;
 
-        PPDToken.transfer(msg.sender, reward);
+        token.transfer(msg.sender, reward);
         emit TokensClaimed(msg.sender, _period, reward);
     }
 
@@ -119,7 +132,7 @@ contract TokenDistribution is
         periodBurned[_period] = true;
 
         uint256 tokensToBurn = periodAllocation;
-        PPDToken.transfer(address(0x0), tokensToBurn);
+        token.transfer(address(0x0), tokensToBurn);
     }
 
     function _authorizeUpgrade(

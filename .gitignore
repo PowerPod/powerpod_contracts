@@ -12,3 +12,13 @@ docs/
 
 # Dotenv file
 .env
+
+node_modules/
+
+broadcast/
+
+cache_hardhat/
+
+artifacts/
+
+.openzeppelin/
