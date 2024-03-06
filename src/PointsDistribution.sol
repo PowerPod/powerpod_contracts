@@ -20,7 +20,9 @@ contract PointsDistribution is
     PTPoints public points;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
-    event Minted(address to, uint256 amount);
+    mapping(uint256 => bool) public minted;
+
+    event Minted(uint256 indexed id, address indexed to, uint256 amount);
     event BurnedAllPTPoints();
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -38,10 +40,12 @@ contract PointsDistribution is
         points = PTPoints(_PTPointsAddress);
     }
 
-    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+    function mint(uint256 id, address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+        require(!minted[id], "PTPoints: already minted");
+        minted[id] = true;
         points.transfer(to, amount);
 
-        emit Minted(to, amount);
+        emit Minted(id, to, amount);
     }
 
     function burnAllPTPoints() public onlyOwner {
