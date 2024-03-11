@@ -97,6 +97,7 @@ contract TokenDistribution is
 
         points.burnFrom(msg.sender, _amount);
         investments[_period][msg.sender] += _amount;
+        totalInvestedInPeriod[_period] += _amount;
 
         emit Invested(msg.sender, _period, _amount);
     }
@@ -118,6 +119,18 @@ contract TokenDistribution is
 
         token.transfer(msg.sender, reward);
         emit TokensClaimed(msg.sender, _period, reward);
+    }
+
+    function checkRewards(uint32 _period, address _user) public view returns (uint256) {
+        uint256 invested = investments[_period][_user];
+        if (invested == 0) {
+            return 0;
+        }
+
+        uint256 totalInvested = totalInvestedInPeriod[_period];
+        uint256 reward = (periodAllocation * invested) / totalInvested;
+
+        return reward;
     }
 
     function burnUninvestedPeriodTokens(uint32 _period) public {
