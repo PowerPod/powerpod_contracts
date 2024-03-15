@@ -9,16 +9,16 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./PTPoints.sol";
 
-contract TokenDistribution is 
-    Initializable, 
-    OwnableUpgradeable, 
-    UUPSUpgradeable, 
-    ReentrancyGuardUpgradeable 
+contract TokenDistribution is
+    Initializable,
+    OwnableUpgradeable,
+    UUPSUpgradeable,
+    ReentrancyGuardUpgradeable
 {
     IERC20 public token;
     PTPoints public points;
 
-    uint256 public constant INITIAL_PRODUCTION = 45 * 10**6 * 10**18;
+    uint256 public constant INITIAL_PRODUCTION = 45 * 10 ** 6 * 10 ** 18;
     uint256 public constant HALVING_PERIOD = 4 * 365 days;
     uint32 public constant PERIOD_LENGTH_IN_SECONDS = 12 * 60 * 60;
     uint256 public lastHalvingTime;
@@ -27,7 +27,7 @@ contract TokenDistribution is
     uint256 public annualAllocation;
     uint256 public dailyAllocation;
     uint256 public periodAllocation;
-    
+
     mapping(uint32 => mapping(address => uint256)) public investments;
     mapping(uint32 => uint256) public totalInvestedInPeriod;
     mapping(uint32 => mapping(address => bool)) public rewardClaimed;
@@ -51,7 +51,10 @@ contract TokenDistribution is
         _;
     }
 
-    function initialize(address _PPDTokenAddress, address _PTPointsAddress) public initializer {
+    function initialize(
+        address _PPDTokenAddress,
+        address _PTPointsAddress
+    ) public initializer {
         __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -59,29 +62,37 @@ contract TokenDistribution is
         token = IERC20(_PPDTokenAddress);
         points = PTPoints(_PTPointsAddress);
 
-        annualAllocation = INITIAL_PRODUCTION * 125 / 1000;
+        annualAllocation = (INITIAL_PRODUCTION * 125) / 1000;
         dailyAllocation = annualAllocation / 365;
         periodAllocation = dailyAllocation / 2;
 
         lastHalvingTime = block.timestamp;
-        
+
         uint256 currentTimestamp = block.timestamp;
         uint256 secondsUntilNextHour = 3600 - (currentTimestamp % 3600);
         startTime = currentTimestamp + secondsUntilNextHour;
     }
 
     function getCurrentPeriod() public view returns (uint32) {
-        require(block.timestamp >= startTime, "Distribution has not started yet");
+        require(
+            block.timestamp >= startTime,
+            "Distribution has not started yet"
+        );
 
         uint256 timeSinceLastHalving = block.timestamp - startTime;
-        uint32 periodsSinceLastHalving = uint32(timeSinceLastHalving / PERIOD_LENGTH_IN_SECONDS);
+        uint32 periodsSinceLastHalving = uint32(
+            timeSinceLastHalving / PERIOD_LENGTH_IN_SECONDS
+        );
 
         return periodsSinceLastHalving + 1;
     }
 
     function halveProduction() public {
-        require(block.timestamp >= lastHalvingTime + HALVING_PERIOD, "Halving period not reached");
-        
+        require(
+            block.timestamp >= lastHalvingTime + HALVING_PERIOD,
+            "Halving period not reached"
+        );
+
         annualAllocation = annualAllocation / 2;
         dailyAllocation = annualAllocation / 365;
         periodAllocation = dailyAllocation / 2;
@@ -89,7 +100,7 @@ contract TokenDistribution is
         lastHalvingTime = block.timestamp;
     }
 
-    function investPT(uint32 _period, uint256 _amount) public onlyEOA{
+    function investPT(uint32 _period, uint256 _amount) public onlyEOA {
         require(_amount > 0, "Investment amount must be greater than 0");
 
         uint32 currentPeriod = getCurrentPeriod();
@@ -102,10 +113,11 @@ contract TokenDistribution is
         emit Invested(msg.sender, _period, _amount);
     }
 
-    function claimTokens(uint32 _period) public nonReentrant{
+    function claimTokens(uint32 _period) public nonReentrant {
         require(!rewardClaimed[_period][msg.sender], "Reward already claimed");
 
-        uint256 periodEndTime = startTime + (_period * PERIOD_LENGTH_IN_SECONDS);
+        uint256 periodEndTime = startTime +
+            (_period * PERIOD_LENGTH_IN_SECONDS);
         require(block.timestamp > periodEndTime, "Period has not ended yet");
 
         uint256 invested = investments[_period][msg.sender];
@@ -121,7 +133,10 @@ contract TokenDistribution is
         emit TokensClaimed(msg.sender, _period, reward);
     }
 
-    function checkRewards(uint32 _period, address _user) public view returns (uint256) {
+    function checkRewards(
+        uint32 _period,
+        address _user
+    ) public view returns (uint256) {
         uint256 invested = investments[_period][_user];
         if (invested == 0) {
             return 0;
@@ -134,14 +149,15 @@ contract TokenDistribution is
     }
 
     function burnUninvestedPeriodTokens(uint32 _period) public {
-        uint256 periodEndTime = startTime + (_period * PERIOD_LENGTH_IN_SECONDS);
+        uint256 periodEndTime = startTime +
+            (_period * PERIOD_LENGTH_IN_SECONDS);
         require(block.timestamp > periodEndTime, "Period has not ended yet");
 
         require(!periodBurned[_period], "Period already burned");
 
         uint256 totalInvested = totalInvestedInPeriod[_period];
         require(totalInvested == 0, "Period has investments");
-        
+
         periodBurned[_period] = true;
 
         uint256 tokensToBurn = periodAllocation;
@@ -151,5 +167,12 @@ contract TokenDistribution is
     function _authorizeUpgrade(
         address newImplementation
     ) internal override onlyOwner {}
-}
 
+    function withdrawTokens(address to) external onlyOwner {
+        uint256 balance = token.balanceOf(address(this));
+        require(
+            token.transfer(to, balance),
+            "TokenMerkleDrop: Withdraw failed."
+        );
+    }
+}
