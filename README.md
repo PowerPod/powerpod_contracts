@@ -35,3 +35,7 @@ npx hardhat run --network sepolia script/DeployPTPoints.s.js
 ```bash
 npx hardhat verify --network sepolia 0xAD32172b6B8860d3015FAeAbF289823453201568
 ```
+
+## Here to claim some faucet USDT for tesing
+
+https://staging.aave.com/faucet/
