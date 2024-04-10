@@ -7,6 +7,7 @@
 | Points Distribution Contract | 0x7BDD924e87f04354DbDAc314b4b39e839403C0c1 |   
 | PPD Token Contract | 0x7a1cbe287fd36a3423151a897B97693886BE667b |   
 | Token Distribution Contract | 0x3981d326152E2C845f41Aea6DFC35E23234FF607 | 
+| Payment | 0xeE6393d237bc57223f9eEBDB7c9B9501737d0365 |
 
 ### Amoy testnet contract addresses
 |  contract | address | 
