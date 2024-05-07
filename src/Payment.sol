@@ -21,7 +21,8 @@ contract PaymentContract is
     struct PaymentInfo {
         address receiver;
         uint256 amount;
-        uint256 withdrawableAfter;
+        uint256 fee;
+        // uint256 withdrawableAfter;
     }
 
     mapping(uint256 => PaymentInfo) public payments;
@@ -69,34 +70,36 @@ contract PaymentContract is
 
         payments[billId] = PaymentInfo({
             receiver: receiver,
-            amount: amountAfterFee,
-            withdrawableAfter: block.timestamp + 12 hours
+            amount: amount,
+            fee: fee
+            // withdrawableAfter: block.timestamp + 12 hours
         });
 
         totalFeesAccumulated += fee;
 
-        usdt.transferFrom(msg.sender, address(this), amount);
+        usdt.transferFrom(msg.sender, address(this), fee);
+        usdt.transferFrom(msg.sender, receiver, amountAfterFee);
         points.transfer(msg.sender, pt);
         points.transfer(receiver, pt);
 
         emit PaymentReceived(msg.sender, receiver, billId, amount, fee, pt);
     }
 
-    function withdraw(uint256 billId) external nonReentrant {
-        require(payments[billId].receiver == msg.sender, "Not the receiver");
-        require(
-            block.timestamp >= payments[billId].withdrawableAfter,
-            "Too early to withdraw"
-        );
+    // function withdraw(uint256 billId) external nonReentrant {
+    //     require(payments[billId].receiver == msg.sender, "Not the receiver");
+    //     require(
+    //         block.timestamp >= payments[billId].withdrawableAfter,
+    //         "Too early to withdraw"
+    //     );
 
-        uint256 amount = payments[billId].amount;
-        require(amount > 0, "No funds to withdraw");
+    //     uint256 amount = payments[billId].amount;
+    //     require(amount > 0, "No funds to withdraw");
 
-        payments[billId].amount = 0;
-        usdt.transfer(msg.sender, amount);
+    //     payments[billId].amount = 0;
+    //     usdt.transfer(msg.sender, amount);
 
-        emit PaymentPaid(msg.sender, billId, amount);
-    }
+    //     emit PaymentPaid(msg.sender, billId, amount);
+    // }
 
     function withdrawFees() external onlyOwner {
         uint256 amount = totalFeesAccumulated;
