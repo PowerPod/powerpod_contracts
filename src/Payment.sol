@@ -21,8 +21,8 @@ contract PaymentContract is
     struct PaymentInfo {
         address receiver;
         uint256 amount;
+        uint256 withdrawableAfter;
         uint256 fee;
-        // uint256 withdrawableAfter;
     }
 
     mapping(uint256 => PaymentInfo) public payments;
@@ -71,8 +71,8 @@ contract PaymentContract is
         payments[billId] = PaymentInfo({
             receiver: receiver,
             amount: amount,
+            withdrawableAfter: block.timestamp + 12 hours,
             fee: fee
-            // withdrawableAfter: block.timestamp + 12 hours
         });
 
         totalFeesAccumulated += fee;
