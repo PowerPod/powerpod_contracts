@@ -8,7 +8,7 @@ require('@openzeppelin/hardhat-upgrades')
 require('dotenv').config()
 
 const INFURA_API_KEY = process.env.INFURA_API_KEY
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+const PPD_PRIVATE_KEY = process.env.PPD_PRIVATE_KEY
 const OKLINK_API_KEY = process.env.OKLINK_API_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 
@@ -18,11 +18,11 @@ module.exports = {
   networks: {
     amoy: {
       url: `https://polygon-amoy.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: [PRIVATE_KEY],
+      accounts: [PPD_PRIVATE_KEY],
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
-      accounts: [PRIVATE_KEY],
+      accounts: [PPD_PRIVATE_KEY],
     },
   },
   etherscan: {
