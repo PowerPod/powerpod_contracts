@@ -10,12 +10,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./PTPoints.sol";
 
-contract PointsDistribution is 
-    Initializable, 
-    OwnableUpgradeable, 
+contract PointsDistribution is
+    Initializable,
+    OwnableUpgradeable,
     AccessControlUpgradeable,
-    UUPSUpgradeable, 
-    ReentrancyGuardUpgradeable  
+    UUPSUpgradeable,
+    ReentrancyGuardUpgradeable
 {
     PTPoints public points;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -40,7 +40,11 @@ contract PointsDistribution is
         points = PTPoints(_PTPointsAddress);
     }
 
-    function mint(uint256 id, address to, uint256 amount) public onlyRole(MINTER_ROLE) {
+    function mint(
+        uint256 id,
+        address to,
+        uint256 amount
+    ) public onlyRole(MINTER_ROLE) {
         require(!minted[id], "PTPoints: already minted");
         minted[id] = true;
         points.transfer(to, amount);
@@ -58,5 +62,4 @@ contract PointsDistribution is
     function _authorizeUpgrade(
         address newImplementation
     ) internal override onlyOwner {}
-    
 }

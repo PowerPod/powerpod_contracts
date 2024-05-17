@@ -4,7 +4,7 @@ async function main() {
   const nft = await hre.ethers.deployContract('RWANFT', [
     'Tesla',
     'tsl',
-    2000,
+    1000,
     'ipfs://QmdKCEXN8KVDSc5AtV1HnBCG9KztMKYwb3yg8P8js848g9',
   ])
 

@@ -1,5 +1,12 @@
 ## PowerPod
 
+### Base Sepolia 
+|  contract | address | 
+|---|---|
+| ZKPass RWA NFT | 0xeB0e05D4b4e4dF7c36a15EbB009fC18CA0f2944b |   
+| ZKPass RWA NFT Sale | 0xF927F99a87d291EA93eDce86AEe27202B1c0AF36 | 
+
+
 ### Sepolia contract addresses
 |  contract | address | 
 |---|---|
@@ -8,7 +15,7 @@
 | PPD Token Contract | 0x7a1cbe287fd36a3423151a897B97693886BE667b |   
 | Token Distribution Contract | 0x3981d326152E2C845f41Aea6DFC35E23234FF607 | 
 | Payment | 0xeE6393d237bc57223f9eEBDB7c9B9501737d0365 |
-| ZKPass RWA NFT |  |
+| ZKPass RWA NFT | 0x344b074F8847C8cC8a9BeE76Ed179346151b0858 |
 
 ### Amoy testnet contract addresses
 |  contract | address | 
