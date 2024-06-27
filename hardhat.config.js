@@ -35,6 +35,13 @@ module.exports = {
       url: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_BASE_API_KEY}`,
       accounts: [PPD_PRIVATE_KEY],
     },
+    iotex: {
+      url: 'https://babel-api.testnet.iotex.io',
+      accounts: [PPD_PRIVATE_KEY],
+      chainId: 4690,
+      // gas: 8500000,
+      // gasPrice: 1000000000000,
+    },
   },
   etherscan: {
     apiKey: {
