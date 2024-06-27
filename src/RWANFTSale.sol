@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -23,7 +23,7 @@ contract RWANFTSale is
     uint256 public publicSaleEndTime;
 
     uint256 public _nextTokenId;
-    uint256 public max_supply;
+    uint256 public maxSupply;
 
     mapping(address => bool) public whitelist;
 
@@ -35,7 +35,7 @@ contract RWANFTSale is
         uint256 _publicEnd,
         uint256 _maxSupply
     ) public initializer {
-        __Ownable_init(msg.sender);
+        __Ownable_init();
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
 
@@ -45,7 +45,7 @@ contract RWANFTSale is
         publicSaleStartTime = _publicStart;
         publicSaleEndTime = _publicEnd;
 
-        max_supply = _maxSupply;
+        maxSupply = _maxSupply;
     }
 
     function addToWhitelist(address _user) public onlyOwner {
@@ -64,7 +64,7 @@ contract RWANFTSale is
             require(whitelist[msg.sender], "Not whitelisted");
         }
 
-        require(_nextTokenId + num <= max_supply, "Exceeds MAX_SUPPLY");
+        require(_nextTokenId + num <= maxSupply, "Exceeds MAX_SUPPLY");
 
         uint256 totalCost = PRICE * num;
         require(

@@ -7,17 +7,23 @@ require('@openzeppelin/hardhat-upgrades')
 
 require('dotenv').config()
 
-const INFURA_API_KEY = process.env.INFURA_API_KEY
-const PPD_PRIVATE_KEY = process.env.PPD_PRIVATE_KEY
-const OKLINK_API_KEY = process.env.OKLINK_API_KEY
-const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
-const BASE_SEPOLIA_EXPLORER_API_KEY = process.env.BASE_SEPOLIA_EXPLORER_API_KEY
-const ALCHEMY_BASE_SEPOLIA_API_KEY = process.env.ALCHEMY_BASE_SEPOLIA_API_KEY
-const ALCHEMY_BASE_API_KEY = process.env.ALCHEMY_BASE_API_KEY
+const INFURA_API_KEY = process.env.INFURA_API_KEY || ''
+const PPD_PRIVATE_KEY = process.env.PPD_PRIVATE_KEY || ''
+const OKLINK_API_KEY = process.env.OKLINK_API_KEY || ''
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ''
+const BASE_SEPOLIA_EXPLORER_API_KEY =
+  process.env.BASE_SEPOLIA_EXPLORER_API_KEY || ''
+const ALCHEMY_BASE_SEPOLIA_API_KEY =
+  process.env.ALCHEMY_BASE_SEPOLIA_API_KEY || ''
+const ALCHEMY_BASE_API_KEY = process.env.ALCHEMY_BASE_API_KEY || ''
 
 module.exports = {
-  solidity: '0.8.20',
-
+  solidity: {
+    version: '0.8.20',
+    settings: {
+      evmVersion: 'shanghai',
+    },
+  },
   networks: {
     amoy: {
       url: `https://polygon-amoy.infura.io/v3/${INFURA_API_KEY}`,
@@ -39,8 +45,8 @@ module.exports = {
       url: 'https://babel-api.testnet.iotex.io',
       accounts: [PPD_PRIVATE_KEY],
       chainId: 4690,
-      // gas: 8500000,
-      // gasPrice: 1000000000000,
+      gas: 85000,
+      gasPrice: 1000000000000,
     },
   },
   etherscan: {

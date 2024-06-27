@@ -7,29 +7,29 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract RWANFT is ERC721Enumerable, Ownable {
     uint256 private _nextTokenId;
-    uint96 public max_supply;
-    string public token_uri;
+    uint96 public maxSupply;
+    string public tokenUri;
 
     constructor(
         string memory name_,
         string memory symbol_,
-        uint96 max_supply_,
-        string memory token_uri_
-    ) ERC721(name_, symbol_) Ownable(msg.sender) {
-        max_supply = max_supply_;
-        token_uri = token_uri_;
+        uint96 maxSupply_,
+        string memory tokenUri_
+    ) ERC721(name_, symbol_) Ownable() {
+        maxSupply = maxSupply_;
+        tokenUri = tokenUri_;
     }
 
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
-        _requireOwned(tokenId);
+        _exists(tokenId);
 
-        return token_uri;
+        return tokenUri;
     }
 
     function batchMint(address recipient, uint256 numTokens) public onlyOwner {
-        require(_nextTokenId + numTokens <= max_supply, "Exceeds MAX_SUPPLY");
+        require(_nextTokenId + numTokens <= maxSupply, "Exceeds MAX_SUPPLY");
 
         for (uint256 i = 0; i < numTokens; i++) {
             _nextTokenId++;
@@ -38,6 +38,7 @@ contract RWANFT is ERC721Enumerable, Ownable {
     }
 
     function burn(uint256 tokenId) public virtual {
-        _update(address(0), tokenId, msg.sender);
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "caller is not owner nor approved");
+        _burn(tokenId);
     }
 }

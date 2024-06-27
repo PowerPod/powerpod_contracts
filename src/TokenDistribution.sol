@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "./PTPoints.sol";
@@ -52,15 +52,15 @@ contract TokenDistribution is
     }
 
     function initialize(
-        address _PPDTokenAddress,
-        address _PTPointsAddress
+        address _ppdTokenAddress,
+        address _ptPointsAddress
     ) public initializer {
-        __Ownable_init(msg.sender);
+        __Ownable_init();
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
 
-        token = IERC20(_PPDTokenAddress);
-        points = PTPoints(_PTPointsAddress);
+        token = IERC20(_ppdTokenAddress);
+        points = PTPoints(_ptPointsAddress);
 
         annualAllocation = (INITIAL_PRODUCTION * 125) / 1000;
         dailyAllocation = annualAllocation / 365;
