@@ -42,9 +42,9 @@ module.exports = {
       accounts: [PPD_PRIVATE_KEY],
     },
     iotex: {
-      url: 'https://babel-api.testnet.iotex.io',
+      url: 'https://babel-api.mainnet.iotex.one',
       accounts: [PPD_PRIVATE_KEY],
-      chainId: 4690,
+      chainId: 4689,
       gas: 85000,
       gasPrice: 1000000000000,
     },
